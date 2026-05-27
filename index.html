@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -569,12 +569,32 @@
       @page { size: A4; margin: 0; }
     }
 
+    /* ═══════════════════════════════════════════
+       MODO CANDIDATO — ocultar seções que só o RH precisa
+       (toolbar, assinatura, LGPD, empresa, posto, matrícula)
+       Essas seções aparecem normalmente no PDF enviado ao RH.
+    ═══════════════════════════════════════════ */
+    .toolbar               { display: none !important; }
+    .print-note            { display: none !important; }
+    .signature             { display: none !important; }
+    .lgpd                  { display: none !important; }
+    .company-box           { display: none !important; }
+    .bottom-row            { display: none !important; }
+
     /* ── MOBILE ── */
     @media (max-width: 850px) {
       html, body { width: 100%; overflow-x: hidden; }
       body { padding: 0; background: var(--navy); }
 
-      /* ── Toolbar ── */
+      /* ── Toolbar (oculta para candidato) ── */
+      .toolbar,
+      .print-note,
+      .signature,
+      .lgpd,
+      .company-box,
+      .bottom-row { display: none !important; }
+
+      /* caso o CSS do toolbar mobile seja carregado – mantém oculto */
       .toolbar {
         position: sticky;
         top: 0;
@@ -1151,6 +1171,7 @@
     }
 
     .pdf-export-wrapper .lgpd {
+      display: block !important;
       padding: 8px 16px 6px !important;
       text-align: center !important;
       font-size: 10px !important;
@@ -1161,6 +1182,7 @@
     }
 
     .pdf-export-wrapper .company-box {
+      display: block !important;
       border: 2px solid var(--border) !important;
       margin-top: 4px !important;
       border-radius: 0 !important;
@@ -1221,7 +1243,7 @@
   </style>
 </head>
 <body>
-  <div class="toolbar">
+  <div class="toolbar" style="display:none">
     <div class="toolbar-title">
       Alternativa Serviços
       <span class="toolbar-sub">Ficha de Cadastro Digital</span>
@@ -1471,8 +1493,8 @@
     </form>
   </main>
 
-  <div class=”print-note”>
-    💡 Preencha todos os campos, depois clique em <strong>🖨️ Imprimir / Salvar PDF</strong> e escolha “Salvar como PDF” para gerar o arquivo preenchido.
+  <div class="print-note" style="display:none">
+    💡 Preencha todos os campos, depois clique em <strong>🖨️ Imprimir / Salvar PDF</strong> e escolha "Salvar como PDF" para gerar o arquivo preenchido.
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
