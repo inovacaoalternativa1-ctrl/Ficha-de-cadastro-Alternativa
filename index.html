@@ -1102,6 +1102,21 @@
       flex: 1 1 0% !important;
     }
 
+    /* ── Span que substitui <input> no clone do PDF ──
+       Exibe o texto completo sem corte; quebra linha se necessário. */
+    .pdf-export-wrapper .pdf-val-text {
+      font-family: 'Poppins', Arial, sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      color: var(--text) !important;
+      flex: 1 1 0% !important;
+      min-width: 0 !important;
+      word-break: break-word !important;
+      white-space: normal !important;
+      line-height: 1.3 !important;
+      overflow: visible !important;
+    }
+
     .pdf-export-wrapper label {
       white-space: nowrap !important;
       font-weight: 800 !important;
@@ -1675,6 +1690,17 @@
           campoClone.value = campo.value;
           campoClone.setAttribute('value', campo.value);
         }
+      });
+
+      // ── Substituir inputs de texto/tel por <span> ──────────────────────────
+      // html2canvas captura apenas a parte VISÍVEL do <input>; se o texto for
+      // mais longo que a caixa, o restante fica cortado no PDF.
+      // Usando <span> o texto completo é exibido e capturado corretamente.
+      clone.querySelectorAll('input[type="text"], input[type="tel"]').forEach(inp => {
+        const span = document.createElement('span');
+        span.className = 'pdf-val-text';
+        span.textContent = (inp.value || '').toUpperCase();
+        inp.parentNode.replaceChild(span, inp);
       });
 
       const wrapper = document.createElement('div');
