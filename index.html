@@ -1084,6 +1084,24 @@
     .pdf-export-wrapper .cell:last-child        { border-right: 0 !important; }
     .pdf-export-wrapper .row .cell:last-child   { border-bottom: 0 !important; }
 
+    /* ── Corrige flex de labels e inputs nas células do PDF ──
+       O novo design usa flex:0 0 100% para labels e inputs (layout label-acima).
+       No PDF precisamos que o label fique inline (auto) e o input preencha o resto. */
+    .pdf-export-wrapper .cell > label:not(.option),
+    .pdf-export-wrapper .cell > strong {
+      flex: 0 0 auto !important;
+      width: auto !important;
+      text-transform: none !important;
+      letter-spacing: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .pdf-export-wrapper .cell > input[type="text"],
+    .pdf-export-wrapper .cell > input[type="date"],
+    .pdf-export-wrapper .cell > input[type="tel"] {
+      flex: 1 1 0% !important;
+    }
+
     .pdf-export-wrapper label {
       white-space: nowrap !important;
       font-weight: 800 !important;
