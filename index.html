@@ -540,6 +540,73 @@
       color: var(--navy);
     }
 
+    .success-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(13, 27, 62, .86);
+      backdrop-filter: blur(8px);
+    }
+
+    .success-screen.is-visible {
+      display: flex;
+    }
+
+    .success-card {
+      width: min(520px, 100%);
+      padding: 34px 28px 30px;
+      border-radius: 22px;
+      background: white;
+      text-align: center;
+      box-shadow: 0 28px 90px rgba(0,0,0,.45);
+      border-top: 6px solid var(--orange);
+    }
+
+    .success-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green);
+      color: white;
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .success-card h2 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 22px;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .success-card p {
+      margin: 12px 0 22px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .success-card button {
+      min-width: 170px;
+      background: var(--orange);
+      color: white;
+      border-radius: 999px;
+      padding: 13px 22px;
+    }
+
+    .success-card button:hover {
+      background: var(--orange-dark);
+    }
+
     .print-note {
       max-width: 880px;
       margin: 16px auto 0;
@@ -1526,8 +1593,17 @@
     </form>
   </main>
 
+  <div id="successScreen" class="success-screen" aria-hidden="true">
+    <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <div class="success-icon">✓</div>
+      <h2 id="successTitle">Parabéns!</h2>
+      <p>Você concluiu uma etapa importante do processo de admissão e atualização.</p>
+      <button type="button" onclick="fecharTelaSucesso()">Concluir</button>
+    </div>
+  </div>
+
   <div class="print-note" style="display:none">
-    💡 Preencha todos os campos, depois clique em <strong>🖨️ Imprimir / Salvar PDF</strong> e escolha "Salvar como PDF" para gerar o arquivo preenchido.
+    💡 Preencha todos os campos, depois clique em <strong>🖨️ Imprimir / Salvar PDF</strong> e escolha “Salvar como PDF” para gerar o arquivo preenchido.
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1836,8 +1912,8 @@
           throw new Error('Erro ao enviar para o Webhook. Status: ' + resposta.status);
         }
 
-        status.textContent = 'Ficha enviada com sucesso para o RH!';
-        alert('Ficha enviada com sucesso para o RH!');
+        limparFichaAposEnvio();
+        mostrarTelaSucesso();
       } catch (error) {
         const mensagemErro = mostrarErroEnvioDetalhado(error);
         status.textContent = mensagemErro;
@@ -1846,6 +1922,28 @@
         document.querySelectorAll('.pdf-export-wrapper').forEach(el => el.remove());
         document.body.classList.remove('gerando-pdf');
       }
+    }
+
+    function limparFichaAposEnvio() {
+      form.reset();
+      localStorage.removeItem(STORAGE_KEY);
+      const status = document.getElementById('statusEnvio');
+      if (status) status.textContent = '';
+    }
+
+    function mostrarTelaSucesso() {
+      const successScreen = document.getElementById('successScreen');
+      if (!successScreen) return;
+      successScreen.classList.add('is-visible');
+      successScreen.setAttribute('aria-hidden', 'false');
+    }
+
+    function fecharTelaSucesso() {
+      const successScreen = document.getElementById('successScreen');
+      if (!successScreen) return;
+      successScreen.classList.remove('is-visible');
+      successScreen.setAttribute('aria-hidden', 'true');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function salvarDados() {
